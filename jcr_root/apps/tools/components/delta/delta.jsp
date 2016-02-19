@@ -7,25 +7,25 @@
         java.util.ArrayList,
         java.util.Collections,
         com.day.cq.wcm.api.PageManager, com.day.cq.wcm.api.WCMMode, com.day.cq.wcm.commons.WCMUtils" %>
-        
+
 <%@include file="/libs/foundation/global.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 
 <%@page import="com.day.cq.widget.HtmlLibraryManager"%><html>
     <head>
-        <title>List Modified Pages</title>
+        <title>Delta Repository tool</title>
         <meta http-equiv="Content-Type" content="text/html; utf-8"/>
         <%
             HtmlLibraryManager htmlMgr = sling.getService(HtmlLibraryManager.class);
             if (htmlMgr != null) {
                 htmlMgr.writeCssInclude(slingRequest, out, "cq.widgets");
                 htmlMgr.writeJsInclude(slingRequest, out, "cq.widgets");
-            } 
+            }
         %>
-        <script type="text/javascript" src="/apps/tools/components/listPage/js/listPage.js" ></script>
+        <script type="text/javascript" src="/apps/tools/components/delta/js/delta.js" ></script>
         <script src="/libs/cq/ui/resources/cq-ui.js" type="text/javascript"></script>
         <style type="text/css">
-        #treeProgress {
+        #deltaList {
             display: block;
             background-color: white;
             width:100%;
@@ -33,55 +33,47 @@
             height:100%;
             border: 1px solid #888888;
             overflow: scroll;
-            overflow-x: auto;  
+            overflow-x: auto;
         }
+
     </style>
-        
+
 </head>
 <body>
-    <h1 align="center">List Pages</h1>
-    <form target="treeProgress" action="<%= resource.getPath() %>.html" method="POST" id="treeProgress_form">
+    <h1>Repository Delta</h1>
+    <form target="treeProgress" action="<%= resource.getPath() %>.html" method="POST" id="deltaForm">
     <input type="hidden" id="listroot" name="listroot" value="/content">
     <table class="form">
         <tr>
-            <td>Start Path:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td><div id="path">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div><br>
-                <small>Select location to activate</small>
-            </td>
+            <td>Path</td>
+            <td><div id="path"</div><br></td>
         </tr>
         <input type="hidden" id="date" name="date">
         <tr>
-            <td>Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td><div id="dateField">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div><br>
-                <small>Select Date</small>
+            <td>Date:</td>
+            <td><div id="dateField"></div><br>
             </td>
         </tr>
-     
-     
-     
+
         <tr>
             <td></td>
             <td>
-               <input type="button" value="Submit" onclick="document.getElementById('treeProgress_form').submit();">
+               <input type="submit" value="Submit">
             </td>
         </tr>
     </table>
-</form><br>
-    <iframe name="treeProgress" id="treeProgress">
-    </iframe>
-        <script>
+</form>
+     <div contenteditable="true" id="deltaList"></div>
+       <script>
             // provide a path selector field with a repository browse dialog
             CQ.Ext.onReady(function() {
             	 var DATETIME_FORMAT = "Y-m-d\\TH:i:s.000-04:00";
-                var w = new CQ.form.PathField({
-                    //"applyTo": "path",
+                 var w = new CQ.form.PathField({
                     renderTo: "CQ",
-//                    "content": "/content",
                     rootPath: "/",
                     predicate: "hierarchy",
                     hideTrigger: false,
                     showTitlesInTree: false,
-                    //name: "fakePathField",
                     value: "/content",
                     width: 400,
                     allowBlank:false,
@@ -104,7 +96,7 @@
                     renderTo: "CQ",
                     allowBlank: false,
                     hiddenFormat:DATETIME_FORMAT,
-                    valueAsString:true, 
+                    valueAsString:true,
                     listeners: {
                         render: function() {
                             this.wrap.anchorTo("dateField", "tl");
@@ -119,11 +111,24 @@
 
                 });
 
-
-                
             });
         </script>
+        <script>
+            $(document).ready(function() {
+                $("#deltaForm").submit(function(event) {
+                  event.preventDefault();
+                  var $form = $( this ),
+                  url = $form.attr( 'action' );
+
+                  var posting = $.post( url, { date: $('#date').val(), listroot: $('#listroot').val() } );
+
+
+                  posting.done(function(data) {
+                    $('#deltaList').html(data)
+                  });
+                });
+            });
+        </script>
+
 </body>
 </html>
-
-   

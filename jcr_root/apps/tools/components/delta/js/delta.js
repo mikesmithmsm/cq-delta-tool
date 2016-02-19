@@ -52,7 +52,7 @@ CQ.wcm.listPage = CQ.Ext.extend(CQ.Ext.Panel, {
             width :390,
             height :400,
             items : [
-            
+
              {
                 id :'date',
                // store :this.pageStore,
@@ -60,7 +60,7 @@ CQ.wcm.listPage = CQ.Ext.extend(CQ.Ext.Panel, {
                 xtype :'datetime',
                 fieldLabel :'Select Date',
                 allowBlank :false
-            }, 
+            },
             {
                 id :'listroot',
                // store :this.pageStore,
@@ -69,21 +69,21 @@ CQ.wcm.listPage = CQ.Ext.extend(CQ.Ext.Panel, {
                 fieldLabel :'Path of list Root',
                 typeAhead :true,
                 value : ""
-                
+
             } ],
             buttons : [ {
                 text :'Submit',
-                
+
                 handler : function() {
-            	
-            	
+
+
     	        curr.leftSidePanel.getForm().submit({
     	        	url : '/apps/tools/components/listPage',
                 	method:'POST',
     	        	success:function(action,result){
     	        	//CQ.Ext.MessageBox.alert('Confirm');
     	        		CQ.Ext.fly('result').update(result.result);
-    	        	
+
     	        	},
     	        	error:function(action,result){
     	        		CQ.Ext.fly('result').update(result.result);

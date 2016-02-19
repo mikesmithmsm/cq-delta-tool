@@ -14,14 +14,14 @@
     lastUnwrappedBy="admin"
     lastWrapped="{Date}2011-10-14T17:34:03.507-04:00"
     lastWrappedBy="admin"
-    name="ModfiedPageList"
+    name="Delta Repository Tool"
     path="/etc/packages/day/support/ModfiedPageList-2"
     version="2">
     <filter jcr:primaryType="nt:unstructured">
         <f0
             jcr:primaryType="nt:unstructured"
             mode="replace"
-            root="/apps/tools/components/listPage"
+            root="/apps/tools/components/delta"
             rules="[]"/>
     </filter>
 </jcr:root>
